@@ -15,13 +15,20 @@ class SpeakerForm
             ->components([
                 Select::make('conference_id')
                     ->relationship('conference', 'title')
-                    ->required(),
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->helperText('Link the speaker to the conference where they will appear.'),
                 TextInput::make('name')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255),
                 TextInput::make('email')
                     ->label('Email address')
-                    ->email(),
+                    ->email()
+                    ->helperText('Optional, but useful for speaker coordination.'),
                 Textarea::make('bio')
+                    ->rows(4)
+                    ->helperText('Add a short speaker profile that admins can reference later.')
                     ->columnSpanFull(),
             ]);
     }

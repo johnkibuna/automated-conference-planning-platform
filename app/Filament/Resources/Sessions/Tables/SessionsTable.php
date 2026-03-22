@@ -20,6 +20,11 @@ class SessionsTable
                     ->searchable(),
                 TextColumn::make('speaker.name')
                     ->searchable(),
+                TextColumn::make('online_link')
+                    ->label('Online access')
+                    ->formatStateUsing(fn (?string $state): string => filled($state) ? 'Available' : 'In-person only')
+                    ->badge()
+                    ->color(fn (?string $state): string => filled($state) ? 'success' : 'gray'),
                 TextColumn::make('start_time')
                     ->dateTime()
                     ->sortable(),

@@ -14,6 +14,7 @@ class Session extends Model
         'conference_id',
         'title',
         'description',
+        'online_link',
         'speaker_id',
         'start_time',
         'end_time',

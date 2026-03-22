@@ -20,8 +20,9 @@ class AnnouncementsTable
                     ->searchable(),
                 TextColumn::make('type')
                     ->badge(),
-                TextColumn::make('created_by')
-                    ->numeric()
+                TextColumn::make('creator.name')
+                    ->label('Created by')
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

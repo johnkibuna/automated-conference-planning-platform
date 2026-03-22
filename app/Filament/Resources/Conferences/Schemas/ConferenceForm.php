@@ -15,25 +15,39 @@ class ConferenceForm
         return $schema
             ->components([
                 TextInput::make('title')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255)
+                    ->helperText('Use the public-facing conference name attendees will recognize.'),
                 Textarea::make('description')
                     ->required()
+                    ->rows(4)
+                    ->helperText('Summarize the event purpose, audience, or key theme.')
                     ->columnSpanFull(),
                 TextInput::make('venue')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255),
                 DateTimePicker::make('start_datetime')
-                    ->required(),
+                    ->required()
+                    ->helperText('When the conference officially begins.'),
                 DateTimePicker::make('end_datetime')
-                    ->required(),
+                    ->required()
+                    ->helperText('When the conference officially ends.'),
                 DateTimePicker::make('registration_deadline')
-                    ->required(),
+                    ->required()
+                    ->helperText('After this time, new registrations should stop.'),
                 Select::make('status')
+                    ->label('Publishing status')
                     ->options(['draft' => 'Draft', 'published' => 'Published', 'closed' => 'Closed'])
                     ->default('draft')
-                    ->required(),
-                TextInput::make('created_by')
                     ->required()
-                    ->numeric(),
+                    ->helperText('Draft is internal, published is live, and closed prevents new activity.'),
+                Select::make('created_by')
+                    ->relationship('creator', 'name')
+                    ->label('Created by')
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->helperText('Choose the admin or coordinator responsible for this conference.'),
             ]);
     }
 }

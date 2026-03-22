@@ -30,15 +30,23 @@ class SessionMaterialResource extends Resource
             ->components([
                 Select::make('session_id')
                     ->relationship('session', 'title')
-                    ->required(),
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->helperText('Link the file to the session where it should be available.'),
                 TextInput::make('file_name')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255)
+                    ->helperText('Use a clear filename such as agenda.pdf or keynote-slides.pptx.'),
                 TextInput::make('file_path')
-                    ->required(),
+                    ->required()
+                    ->helperText('Store the relative or full path used by your file storage setup.'),
                 TextInput::make('file_type')
-                    ->required(),
+                    ->required()
+                    ->helperText('Examples: pdf, pptx, docx.'),
                 DateTimePicker::make('uploaded_at')
-                    ->required(),
+                    ->required()
+                    ->helperText('When the file became available to the team.'),
             ]);
     }
 
@@ -46,6 +54,10 @@ class SessionMaterialResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('session.conference.title')
+                    ->label('Conference')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('session.title')
                     ->searchable(),
                 TextColumn::make('file_name')

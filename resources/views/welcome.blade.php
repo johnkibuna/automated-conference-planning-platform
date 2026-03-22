@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $conference->title ?? 'SummitAfrica' }}</title>
+    <title>{{ $conference?->title ?? 'SummitAfrica' }}</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -76,7 +76,10 @@
 
         .hero {
             padding: 100px 0 70px;
-            background: linear-gradient(135deg, #ffffff 0%, #eef6fb 100%);
+            background:
+                radial-gradient(circle at top right, rgba(44, 177, 166, 0.16), transparent 28%),
+                radial-gradient(circle at left center, rgba(15, 76, 129, 0.10), transparent 24%),
+                linear-gradient(135deg, #ffffff 0%, #eef6fb 100%);
         }
 
         .hero-badge {
@@ -122,32 +125,133 @@
             color: var(--text-dark);
         }
 
-        .hero-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 16px 40px rgba(15, 76, 129, 0.12);
+        .hero-energy {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .hero-energy-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(15, 76, 129, 0.10);
+            box-shadow: 0 10px 26px rgba(15, 76, 129, 0.08);
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .hero-stage {
+            position: relative;
+        }
+
+        .hero-carousel {
+            overflow: hidden;
+            border-radius: 24px;
+            box-shadow: 0 20px 55px rgba(15, 76, 129, 0.16);
             border: 1px solid rgba(15, 76, 129, 0.08);
         }
 
-        .hero-stat {
-            text-align: center;
-            padding: 18px;
-            border-radius: 16px;
-            background: var(--bg-light);
+        .hero-slide {
+            position: relative;
+            height: 440px;
         }
 
-        .hero-stat h3 {
-            font-size: 1.8rem;
+        .hero-slide::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15, 76, 129, 0.10) 0%, rgba(15, 76, 129, 0.68) 100%);
+        }
+
+        .hero-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-slide-copy {
+            position: absolute;
+            left: 28px;
+            right: 28px;
+            bottom: 26px;
+            z-index: 2;
+            color: #fff;
+        }
+
+        .hero-slide-copy span {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(8px);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .hero-slide-copy h4 {
+            font-size: 1.7rem;
             font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
-        .hero-stat p {
+        .hero-slide-copy p {
             margin-bottom: 0;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.88);
+            line-height: 1.7;
+        }
+
+        .hero-float-chip {
+            position: absolute;
+            z-index: 3;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.94);
+            color: var(--text-dark);
+            box-shadow: 0 16px 34px rgba(15, 76, 129, 0.14);
+            border: 1px solid rgba(15, 76, 129, 0.08);
+            animation: floatY 6s ease-in-out infinite;
+        }
+
+        .hero-float-chip strong {
+            display: block;
             font-size: 0.95rem;
+        }
+
+        .hero-float-chip small {
+            display: block;
+            color: var(--text-muted);
+        }
+
+        .hero-float-chip.one {
+            top: -12px;
+            right: 24px;
+        }
+
+        .hero-float-chip.two {
+            left: -20px;
+            bottom: 34px;
+            animation-delay: 1.3s;
+        }
+
+        @keyframes floatY {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .section {
@@ -170,6 +274,7 @@
         }
 
         .feature-card,
+        .conference-card,
         .speaker-card,
         .schedule-card,
         .announcement-card {
@@ -195,6 +300,7 @@
         }
 
         .feature-card h5,
+        .conference-card h5,
         .speaker-card h5,
         .schedule-card h5,
         .announcement-card h5 {
@@ -203,6 +309,7 @@
         }
 
         .feature-card p,
+        .conference-card p,
         .speaker-card p,
         .schedule-card p,
         .announcement-card p {
@@ -236,6 +343,21 @@
             color: var(--primary);
         }
 
+        .status-draft {
+            background: rgba(108, 117, 125, 0.12);
+            color: #6c757d;
+        }
+
+        .status-published {
+            background: rgba(25, 135, 84, 0.12);
+            color: #198754;
+        }
+
+        .status-closed {
+            background: rgba(220, 53, 69, 0.12);
+            color: #dc3545;
+        }
+
         .status-delayed {
             background: rgba(255, 193, 7, 0.18);
             color: #9a6700;
@@ -258,6 +380,16 @@
             font-weight: 800;
             font-size: 1.3rem;
             margin-bottom: 18px;
+        }
+
+        .conference-card .meta-line {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .conference-card .meta-line:last-child {
+            margin-bottom: 0;
         }
 
         .announcement-card.warning {
@@ -337,6 +469,15 @@
             .hero {
                 padding: 80px 0 50px;
             }
+
+            .hero-slide {
+                height: 360px;
+            }
+
+            .hero-float-chip.two {
+                left: 12px;
+                bottom: 18px;
+            }
         }
 
         @media (max-width: 767px) {
@@ -354,9 +495,27 @@
                 margin-bottom: 10px;
             }
 
+            .hero-slide,
             .hero-image,
             .section-image {
                 height: 220px;
+            }
+
+            .hero-slide-copy {
+                left: 18px;
+                right: 18px;
+                bottom: 18px;
+            }
+
+            .hero-slide-copy h4 {
+                font-size: 1.3rem;
+            }
+
+            .hero-float-chip {
+                position: static;
+                margin-top: 14px;
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -375,12 +534,13 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                 <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#conferences">Conferences</a></li>
                 <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
                 <li class="nav-item"><a class="nav-link" href="#schedule">Schedule</a></li>
                 <li class="nav-item"><a class="nav-link" href="#speakers">Speakers</a></li>
                 <li class="nav-item"><a class="nav-link" href="#updates">Updates</a></li>
                 <li class="nav-item ms-lg-2">
-                    <a href="#" class="btn btn-primary-custom">Register</a>
+                    <a href="{{ $conference ? route('conferences.register', $conference) : '#conferences' }}" class="btn btn-primary-custom">Register</a>
                 </li>
             </ul>
         </div>
@@ -392,41 +552,154 @@
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-7">
-                <span class="hero-badge">Smart Conference Management Platform</span>
-                <h1 class="hero-title mb-3">{{ $conference->title ?? 'Annual Technology Conference 2026' }}</h1>
-                <p class="hero-text mb-4">{{ $conference->description ?? 'A modern platform for conference registration, QR-code attendance tracking, session scheduling, speaker management, and real-time event updates.' }}</p>
+                <span class="hero-badge">
+                    {{ $conference ? 'Now spotlighting' : 'Fresh vibes for bold events' }}
+                </span>
+                <h1 class="hero-title mb-3">{{ $conference?->title ?? 'Big ideas, good people, and memorable conference energy.' }}</h1>
+                <p class="hero-text mb-4">{{ $conference?->description ?? 'Discover vibrant events, inspiring speakers, and smooth schedules all in one place.' }}</p>
                 <div class="hero-meta mb-4">
-                    <div class="hero-meta-item"><i class="bi bi-geo-alt-fill me-2 text-primary"></i>{{ $conference->venue ?? 'Nairobi Conference Centre' }}</div>
-                    <div class="hero-meta-item"><i class="bi bi-calendar-event-fill me-2 text-primary"></i>{{ isset($conference) ? \Carbon\Carbon::parse($conference->start_datetime)->format('M d, Y h:i A') : 'Jul 15, 2026 09:00 AM' }}</div>
-                    <div class="hero-meta-item"><i class="bi bi-hourglass-split me-2 text-primary"></i>Registration closes: {{ isset($conference) ? \Carbon\Carbon::parse($conference->registration_deadline)->format('M d, Y') : 'Jul 10, 2026' }}</div>
+                    <div class="hero-meta-item"><i class="bi bi-geo-alt-fill me-2 text-primary"></i>{{ $conference?->venue ?? 'Venue will appear here' }}</div>
+                    <div class="hero-meta-item"><i class="bi bi-calendar-event-fill me-2 text-primary"></i>{{ $conference?->start_datetime?->format('M d, Y h:i A') ?? 'Start date will appear here' }}</div>
+                    <div class="hero-meta-item"><i class="bi bi-hourglass-split me-2 text-primary"></i>Registration closes: {{ $conference?->registration_deadline?->format('M d, Y') ?? 'Deadline will appear here' }}</div>
                 </div>
                 <div class="d-flex flex-column flex-md-row gap-3 mb-4">
-                    <a href="#" class="btn btn-primary-custom">Register Now</a>
-                    <a href="#schedule" class="btn btn-outline-custom">View Schedule</a>
+                    <a href="{{ $conference ? route('conferences.register', $conference) : '#conferences' }}" class="btn btn-primary-custom">Register Now</a>
+                    <a href="#schedule" class="btn btn-outline-custom">Catch the Lineup</a>
                 </div>
-{{--                <div class="hero-card mt-4">--}}
-{{--                    <h4 class="fw-bold mb-4">Conference Overview</h4>--}}
-{{--                    <div class="row g-3 mb-3">--}}
-{{--                        <div class="col-6"><div class="hero-stat"><p>Speakers</p></div></div>--}}
-{{--                        <div class="col-6"><div class="hero-stat"><p>Sessions</p></div></div>--}}
-{{--                        <div class="col-6"><div class="hero-stat"><p>Registrations</p></div></div>--}}
-{{--                        <div class="col-6"><div class="hero-stat"><p>Updates</p></div></div>--}}
-{{--                    </div>--}}
-{{--                    <hr class="my-4">--}}
-{{--                    <p class="mb-0 text-muted" style="line-height: 1.8;">Participants can register online, view the conference agenda, access speaker materials, and receive live event updates from one central platform.</p>--}}
-{{--                </div>--}}
+                <div class="hero-energy">
+                    <div class="hero-energy-chip">
+                        <i class="bi bi-stars text-primary"></i>
+                        <span>Good energy</span>
+                    </div>
+                    <div class="hero-energy-chip">
+                        <i class="bi bi-people-fill text-primary"></i>
+                        <span>{{ $conference?->speakers_count ?? $speakers->count() }} speakers in the mix</span>
+                    </div>
+                    <div class="hero-energy-chip">
+                        <i class="bi bi-lightning-charge-fill text-primary"></i>
+                        <span>{{ $conference?->sessions_count ?? $sessions->count() }} sessions to catch</span>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-5">
-                <div class="image-card mb-4">
-                    <img src="{{ asset('images/hero_section.jpg') }}" alt="Conference Hero Image" class="hero-image">
+                <div class="hero-stage">
+                    <div class="hero-float-chip one">
+                        <i class="bi bi-mic-fill text-primary"></i>
+                        <div>
+                            <strong>{{ $conference?->speakers_count ?? $speakers->count() }} speaker{{ (($conference?->speakers_count ?? $speakers->count()) === 1) ? '' : 's' }}</strong>
+                            <small>Fresh voices on stage</small>
+                        </div>
+                    </div>
+
+                    <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        </div>
+
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="hero-slide">
+                                    <img src="{{ asset('images/hero_section.jpg') }}" alt="Crowd arriving at the conference">
+                                    <div class="hero-slide-copy">
+                                        <span>Arrive</span>
+                                        <h4>Step into a conference that feels alive</h4>
+                                        <p>From the first welcome to the last session, the vibe should feel smooth, modern, and exciting.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="hero-slide">
+                                    <img src="{{ asset('images/speaker.jpg') }}" alt="Speaker moment">
+                                    <div class="hero-slide-copy">
+                                        <span>Listen</span>
+                                        <h4>Meet voices worth paying attention to</h4>
+                                        <p>Explore talks, connect with speakers, and catch ideas that stick with you after the event.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="hero-slide">
+                                    <img src="{{ asset('images/updates.jpg') }}" alt="Audience and event moments">
+                                    <div class="hero-slide-copy">
+                                        <span>Move</span>
+                                        <h4>Stay in the flow without missing a moment</h4>
+                                        <p>Schedules, updates, and key moments stay easy to follow so the experience feels effortless.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hero-float-chip two">
+                        <i class="bi bi-calendar2-event-fill text-primary"></i>
+                        <div>
+                            <strong>{{ $conference?->start_datetime?->format('M d') ?? 'Coming soon' }}</strong>
+                            <small>Save the date</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- Conferences -->
+<section class="section pt-0" id="conferences">
+    <div class="container">
+        <h2 class="section-title">Available Conferences</h2>
+        <p class="section-subtitle">
+            Pick the experience that fits your mood, your schedule, and the kind of crowd you want to be around.
+        </p>
+
+        <div class="row g-4">
+            @if($conference)
+                <div class="col-lg-6">
+                    <div class="conference-card">
+                        <span class="status-badge status-{{ $conference->status }}">{{ ucfirst($conference->status) }}</span>
+                        <h5 class="mt-3">{{ $conference->title }}</h5>
+                        <p class="mb-4">{{ $conference->description }}</p>
+                        <div class="meta-line"><i class="bi bi-geo-alt-fill me-2 text-primary"></i>{{ $conference->venue }}</div>
+                        <div class="meta-line"><i class="bi bi-calendar-event-fill me-2 text-primary"></i>{{ $conference->start_datetime?->format('M d, Y h:i A') }} to {{ $conference->end_datetime?->format('M d, Y h:i A') }}</div>
+                        <div class="meta-line"><i class="bi bi-person-video3 me-2 text-primary"></i>{{ $conference->speakers_count ?? $speakers->count() }} speakers and {{ $conference->sessions_count ?? $sessions->count() }} sessions</div>
+                        <div class="mt-4">
+                            <a href="{{ route('conferences.register', $conference) }}" class="btn btn-primary-custom">Register for This Event</a>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @forelse($otherConferences as $otherConference)
+                <div class="col-lg-6">
+                    <div class="conference-card">
+                        <span class="status-badge status-{{ $otherConference->status }}">{{ ucfirst($otherConference->status) }}</span>
+                        <h5 class="mt-3">{{ $otherConference->title }}</h5>
+                        <p class="mb-4">{{ $otherConference->description }}</p>
+                        <div class="meta-line"><i class="bi bi-geo-alt-fill me-2 text-primary"></i>{{ $otherConference->venue }}</div>
+                        <div class="meta-line"><i class="bi bi-calendar-event-fill me-2 text-primary"></i>{{ $otherConference->start_datetime?->format('M d, Y h:i A') }}</div>
+                        <div class="meta-line"><i class="bi bi-hourglass-split me-2 text-primary"></i>Registration deadline: {{ $otherConference->registration_deadline?->format('M d, Y') }}</div>
+                        <div class="mt-4">
+                            <a href="{{ route('conferences.register', $otherConference) }}" class="btn btn-primary-custom">Register for This Event</a>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                @unless($conference)
+                    <div class="col-12">
+                        <div class="conference-card text-center">
+                            <h5>No conferences published yet</h5>
+                            <p>Fresh conference experiences will appear here soon.</p>
+                        </div>
+                    </div>
+                @endunless
+            @endforelse
+        </div>
+    </div>
+</section>
+
 <!-- Features -->
-<section class="section">
+<section class="section" id="features">
     <div class="container">
         <h2 class="section-title">Why Use SummitAfrica?</h2>
         <p class="section-subtitle">
@@ -629,8 +902,8 @@
                 Register now to secure your spot, receive your QR code for attendance confirmation,
                 and stay updated with the latest conference information.
             </p>
-            <a href="#" class="btn btn-light btn-lg px-4 py-3 fw-semibold">
-                Register for Conference
+            <a href="{{ $conference ? route('conferences.register', $conference) : '#conferences' }}" class="btn btn-light btn-lg px-4 py-3 fw-semibold">
+                Register Now
             </a>
         </div>
     </div>

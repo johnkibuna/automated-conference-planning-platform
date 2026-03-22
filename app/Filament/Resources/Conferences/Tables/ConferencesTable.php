@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Conferences\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -29,8 +30,9 @@ class ConferencesTable
                     ->sortable(),
                 TextColumn::make('status')
                     ->badge(),
-                TextColumn::make('created_by')
-                    ->numeric()
+                TextColumn::make('creator.name')
+                    ->label('Created by')
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -45,6 +47,10 @@ class ConferencesTable
                 //
             ])
             ->recordActions([
+                Action::make('checkInDesk')
+                    ->label('Check-In Desk')
+                    ->icon('heroicon-o-qr-code')
+                    ->url(fn ($record): string => route('conferences.checkin.desk', $record), shouldOpenInNewTab: true),
                 EditAction::make(),
             ])
             ->toolbarActions([

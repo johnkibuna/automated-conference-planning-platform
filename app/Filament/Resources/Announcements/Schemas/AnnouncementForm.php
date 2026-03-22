@@ -15,19 +15,30 @@ class AnnouncementForm
             ->components([
                 Select::make('conference_id')
                     ->relationship('conference', 'title')
-                    ->required(),
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->helperText('Choose the conference the update should appear under.'),
                 TextInput::make('title')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255),
                 Textarea::make('message')
                     ->required()
+                    ->rows(5)
+                    ->helperText('Publishing a new announcement sends this update by email to everyone already registered for the conference.')
                     ->columnSpanFull(),
                 Select::make('type')
                     ->options(['general' => 'General', 'schedule_change' => 'Schedule change', 'delay' => 'Delay'])
                     ->default('general')
-                    ->required(),
-                TextInput::make('created_by')
                     ->required()
-                    ->numeric(),
+                    ->helperText('Use schedule change or delay when timing is affected.'),
+                Select::make('created_by')
+                    ->relationship('creator', 'name')
+                    ->label('Created by')
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->helperText('Record which admin or organizer published this announcement.'),
             ]);
     }
 }

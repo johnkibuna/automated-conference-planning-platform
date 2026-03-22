@@ -16,19 +16,30 @@ class RegistrationForm
             ->components([
                 Select::make('conference_id')
                     ->relationship('conference', 'title')
-                    ->required(),
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->helperText('Select the conference the attendee is registering for.'),
                 Select::make('participant_id')
                     ->relationship('participant', 'name')
-                    ->required(),
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->helperText('Pick the participant account linked to this registration.'),
                 TextInput::make('registration_code')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255)
+                    ->helperText('Use a unique code for check-in and admin tracking.'),
                 Select::make('status')
                     ->options(['registered' => 'Registered', 'cancelled' => 'Cancelled'])
                     ->default('registered')
-                    ->required(),
+                    ->required()
+                    ->helperText('Cancelled registrations stay in history but are no longer active.'),
                 Toggle::make('confirmed')
-                    ->required(),
-                DateTimePicker::make('confirmed_at'),
+                    ->required()
+                    ->helperText('Turn this on once the registration has been verified or approved.'),
+                DateTimePicker::make('confirmed_at')
+                    ->helperText('Optional. Set the time when confirmation happened.'),
             ]);
     }
 }

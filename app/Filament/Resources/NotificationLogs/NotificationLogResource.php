@@ -4,6 +4,7 @@ namespace App\Filament\Resources\NotificationLogs;
 
 use App\Filament\Resources\NotificationLogs\Pages\ManageNotificationLogs;
 use App\Models\NotificationLog;
+use App\Models\Registration;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -30,22 +31,34 @@ class NotificationLogResource extends Resource
             ->components([
                 Select::make('conference_id')
                     ->relationship('conference', 'title')
-                    ->required(),
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->helperText('Choose the conference related to this message.'),
                 Select::make('registration_id')
-                    ->relationship('registration', 'id')
-                    ->required(),
+                    ->relationship('registration', 'registration_code')
+                    ->getOptionLabelFromRecordUsing(fn (Registration $record): string => "{$record->registration_code} - {$record->participant?->name}")
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->helperText('Pick the attendee registration that received the notification.'),
                 Select::make('channel')
                     ->options(['email' => 'Email'])
                     ->default('email')
-                    ->required(),
+                    ->required()
+                    ->helperText('Email is the currently supported outbound channel.'),
                 TextInput::make('subject')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255)
+                    ->helperText('Use a short subject that admins can scan quickly later.'),
                 DateTimePicker::make('sent_at')
-                    ->required(),
+                    ->required()
+                    ->helperText('When the message was sent or attempted.'),
                 Select::make('status')
                     ->options(['sent' => 'Sent', 'failed' => 'Failed'])
                     ->default('sent')
-                    ->required(),
+                    ->required()
+                    ->helperText('Failed can be used for retries or troubleshooting.'),
             ]);
     }
 
@@ -55,7 +68,11 @@ class NotificationLogResource extends Resource
             ->columns([
                 TextColumn::make('conference.title')
                     ->searchable(),
-                TextColumn::make('registration.id')
+                TextColumn::make('registration.registration_code')
+                    ->label('Registration code')
+                    ->searchable(),
+                TextColumn::make('registration.participant.name')
+                    ->label('Participant')
                     ->searchable(),
                 TextColumn::make('channel')
                     ->badge(),
