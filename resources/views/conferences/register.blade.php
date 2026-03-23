@@ -331,8 +331,7 @@
                     <div class="mini-step">
                         <div class="mini-step-icon"><i class="bi bi-ui-checks-grid"></i></div>
                         <div>
-                            <h6>Built from the event form</h6>
-                            <p>The questions here come straight from the event’s registration setup, so each conference can collect exactly what it needs.</p>
+                            <h6>Event form so we know about you</h6>
                         </div>
                     </div>
 
@@ -340,7 +339,6 @@
                         <div class="mini-step-icon"><i class="bi bi-qr-code"></i></div>
                         <div>
                             <h6>Instant QR confirmation</h6>
-                            <p>As soon as you finish, you get a QR code and registration code for check-in.</p>
                         </div>
                     </div>
 
